@@ -1,0 +1,63 @@
+{
+  "fecha": "2026-11-10T12:56:40.869Z",
+  "resultados": [
+    {
+      "id": "PE-01",
+      "descripcion": "Un estudiante nuevo crea su cuenta y entra al listado de ofertas",
+      "estado": "OK",
+      "segundos": 1
+    },
+    {
+      "id": "PE-02",
+      "descripcion": "El listado se filtra por texto y se pagina de a cuatro ofertas",
+      "estado": "OK",
+      "segundos": 0.4
+    },
+    {
+      "id": "PE-03",
+      "descripcion": "El estudiante se postula con su hoja de vida en PDF y ve la postulación como \"Enviada\"",
+      "estado": "OK",
+      "segundos": 0.9
+    },
+    {
+      "id": "PE-04",
+      "descripcion": "La empresa revisa al postulante y lo preselecciona; Coordinación recibe el aviso",
+      "estado": "OK",
+      "segundos": 1.6
+    },
+    {
+      "id": "PE-05",
+      "descripcion": "Coordinación ve el convenio vigente y aprueba la postulación",
+      "estado": "OK",
+      "segundos": 2.1
+    },
+    {
+      "id": "PE-06",
+      "descripcion": "Con el convenio vencido no se puede aprobar: solo rechazar o devolver, y la devolución exige un motivo",
+      "estado": "OK",
+      "segundos": 1.1
+    },
+    {
+      "id": "PE-07",
+      "descripcion": "El estudiante ve su postulación como \"Aprobada\"",
+      "estado": "OK",
+      "segundos": 1.1
+    },
+    {
+      "id": "PE-08",
+      "descripcion": "Un estudiante no puede abrir las pantallas de Coordinación ni de las empresas",
+      "estado": "OK",
+      "segundos": 1.1
+    },
+    {
+      "id": "PE-09",
+      "descripcion": "La interfaz se adapta a un teléfono de 390 px sin desplazamiento horizontal",
+      "estado": "OK"
+    },
+    {
+      "id": "PE-10",
+      "descripcion": "Durante todo el recorrido no hubo errores de consola, de red ni del servidor",
+      "estado": "OK"
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+▶ API: cuentas, sesión y ofertas (PostgreSQL real)
+  ✔ PI-01 el servidor responde, está conectado a PostgreSQL y el catálogo trae los 5 programas de la semilla (67.304903ms)
+  ✔ PI-02 el registro de un estudiante crea la cuenta con la contraseña cifrada y guarda la autorización de datos (122.506148ms)
+  ✔ PI-03 los duplicados de correo, documento y NIT se detectan con las restricciones UNIQUE reales y no dejan registros a medias (211.075475ms)
+  ✔ PI-04 el ingreso valida las credenciales; un token alterado, vencido o de una cuenta desactivada no da acceso (289.663143ms)
+  ✔ PI-05 cada rol solo accede a lo suyo: las acciones de otro rol se responden con 403 (184.602245ms)
+  ✔ PI-06 una empresa publica una oferta que aparece en el listado; los datos inválidos se rechazan con 422 (137.151139ms)
+  ✔ PI-07 el listado filtra, pagina y oculta lo que no se puede postular; el texto de búsqueda no inyecta SQL (143.871178ms)
+  ✔ PI-08 el detalle de una oferta incluye el estado del convenio de la empresa y la postulación previa del estudiante (132.789734ms)
+✔ API: cuentas, sesión y ofertas (PostgreSQL real) (1777.665875ms)
+▶ API: postulaciones y aprobación con validación de convenio (PostgreSQL real)
+  ✔ PI-09 un estudiante se postula con su hoja de vida en PDF; queda "enviada" y la empresa recibe el aviso (49.610952ms)
+  ✔ PI-10 no se acepta una segunda postulación a la misma oferta, ni siquiera con dos envíos simultáneos (32.13131ms)
+  ✔ PI-11 la hoja de vida se valida en el servidor: solo PDF, máximo 2 MB y con autorización de datos (121.637773ms)
+  ✔ PI-12 la hoja de vida solo la descarga su dueño, la empresa de la oferta y Coordinación (38.361578ms)
+  ✔ PI-13 flujo completo: preselección, aviso a Coordinación, aprobación con convenio vigente y cierre automático de la oferta (65.213734ms)
+  ✔ PI-14 con el convenio vencido no se aprueba: Coordinación devuelve la postulación y, al renovar el convenio, la aprueba (48.945088ms)
+  ✔ PI-15 una empresa sin convenio no puede tener aprobaciones; Coordinación puede rechazar con motivo y la decisión es definitiva (34.941758ms)
+  ✔ PI-16 suspender un convenio bloquea las aprobaciones y reactivarlo las habilita; "por vencer" todavía permite aprobar (40.103269ms)
+  ✔ PI-17 dos aprobaciones simultáneas sobre una oferta de un solo cupo: una se aprueba y la otra recibe SIN_CUPOS (52.591454ms)
+  ✔ PI-18 el panel de Coordinación coincide con la base de datos: contadores, filtro por estado y paginación (15.166681ms)
+✔ API: postulaciones y aprobación con validación de convenio (PostgreSQL real) (1579.782695ms)
+▶ API: seguridad de las respuestas, entradas malformadas y base de datos (PostgreSQL real)
+  ✔ PI-19 las respuestas llevan las cabeceras de seguridad y la API no se guarda en cachés compartidas (58.862849ms)
+  ✔ PI-20 las entradas malformadas reciben errores controlados en JSON, sin detalles internos (217.716121ms)
+  ✔ PI-21 tras 5 intentos fallidos el ingreso se bloquea con 429, solo para esa cuenta (292.16676ms)
+  ✔ PI-22 las migraciones son idempotentes y la base respeta sus restricciones aunque se salte la API (8.589237ms)
+✔ API: seguridad de las respuestas, entradas malformadas y base de datos (PostgreSQL real) (982.807343ms)
+▶ Vigencia de los convenios
+  ✔ PU-14 un convenio con fechas dentro del rango se evalúa como vigente (1.320899ms)
+  ✔ PU-15 a 30 días del vencimiento queda "por vencer" y a 31 sigue "vigente" (0.642884ms)
+  ✔ PU-16 el último día cuenta como vigente y al día siguiente está vencido (0.198549ms)
+  ✔ PU-17 un convenio suspendido o terminado nunca es vigente, aunque las fechas coincidan (0.115869ms)
+  ✔ PU-18 un convenio que todavía no inicia no es vigente (0.110646ms)
+  ✔ PU-19 una empresa sin convenios queda como "sin_convenio" (0.150011ms)
+  ✔ PU-20 entre varios convenios se escoge el vigente que vence más tarde (renovaciones) (0.133768ms)
+  ✔ PU-21 si ninguno está vigente se toma el que terminó más recientemente (0.110103ms)
+✔ Vigencia de los convenios (5.305008ms)
+▶ Fechas y disponibilidad de las ofertas
+  ✔ PU-22 la fecha del día se calcula con la hora de Colombia (UTC-5) (13.320288ms)
+  ✔ PU-23 se rechazan fechas inexistentes como el 31 de febrero (0.290829ms)
+  ✔ PU-24 una oferta abierta, vigente y con cupos acepta postulaciones (0.166031ms)
+  ✔ PU-25 una oferta cerrada, vencida o sin cupos no acepta postulaciones (0.127184ms)
+✔ Fechas y disponibilidad de las ofertas (14.122669ms)
+▶ Máquina de estados de las postulaciones
+  ✔ PU-01 la empresa preselecciona una postulación enviada (0.969305ms)
+  ✔ PU-02 Coordinación aprueba una postulación preseleccionada si el convenio está vigente (0.260528ms)
+  ✔ PU-03 aprobar con el convenio vencido se rechaza con CONVENIO_NO_VIGENTE (0.496818ms)
+  ✔ PU-04 aprobar cuando la empresa no tiene convenio registrado se rechaza (0.20207ms)
+  ✔ PU-05 un convenio "por vencer" todavía permite aprobar (0.130754ms)
+  ✔ PU-06 un rol que no corresponde recibe PROHIBIDO (la empresa no puede aprobar) (0.125048ms)
+  ✔ PU-07 una postulación descartada no puede aprobarse (TRANSICION_INVALIDA) (0.090193ms)
+  ✔ PU-08 devolver solo procede si el convenio no está vigente (CONVENIO_VIGENTE) (0.116858ms)
+  ✔ PU-09 una postulación devuelta puede aprobarse cuando el convenio se regulariza (0.131618ms)
+  ✔ PU-10 una acción que no existe se responde con 400 ACCION_DESCONOCIDA (0.121388ms)
+  ✔ PU-11 con convenio vencido se ofrece rechazar y devolver, pero no aprobar (1.082866ms)
+  ✔ PU-12 sobre una postulación enviada la empresa puede preseleccionar o descartar (0.185173ms)
+  ✔ PU-13 los estados finales no ofrecen ninguna acción (0.288995ms)
+✔ Máquina de estados de las postulaciones (5.670008ms)
+▶ Tokens JWT
+  ✔ PU-38 un token firmado se verifica y devuelve su carga (2.058161ms)
+  ✔ PU-39 un token con la carga alterada se rechaza por firma inválida (1.06357ms)
+  ✔ PU-40 un token vencido se rechaza con TOKEN_EXPIRADO (0.386636ms)
+  ✔ PU-41 un token con "alg: none" o firmado con otro secreto no se acepta (0.355348ms)
+  ✔ PU-42 un valor que no es un token se rechaza sin lanzar errores inesperados (0.323709ms)
+✔ Tokens JWT (5.670702ms)
+▶ Contraseñas
+  ✔ PU-43 la contraseña se guarda con scrypt y sal aleatoria, y solo la clave correcta valida (204.857194ms)
+  ✔ PU-44 un hash guardado con formato inválido nunca valida (0.665476ms)
+✔ Contraseñas (205.955981ms)
+▶ Limitador de intentos de ingreso
+  ✔ PU-45 tras 5 fallos la clave se bloquea y se libera al terminar la ventana de tiempo (0.550125ms)
+  ✔ PU-46 un ingreso correcto reinicia el contador de fallos (0.292817ms)
+✔ Limitador de intentos de ingreso (1.07792ms)
+▶ Configuración
+  ✔ PU-47 en producción se exige un JWT_SECRET de al menos 16 caracteres (0.594523ms)
+  ✔ PU-48 en desarrollo se usa una clave por defecto y se leen los valores del entorno (0.307206ms)
+✔ Configuración (1.058085ms)
+▶ Servicio de cuentas
+  ✔ PU-66 un ingreso correcto entrega un token válido y un perfil sin estado ni contraseña (57.123567ms)
+  ✔ PU-67 correo desconocido, contraseña errónea y cuenta inactiva reciben exactamente el mismo error (189.244938ms)
+  ✔ PU-68 después de 5 intentos fallidos el ingreso se bloquea con 429, aunque la clave sea la correcta (318.327969ms)
+  ✔ PU-69 el registro traduce los duplicados de correo, documento y NIT y valida que el programa exista (148.049767ms)
+  ✔ PU-70 un registro válido guarda la contraseña como hash y abre sesión (43.956922ms)
+✔ Servicio de cuentas (809.351147ms)
+▶ Servicio de ofertas y panel de Coordinación
+  ✔ PU-71 solo las empresas publican ofertas; la oferta nace abierta, con la fecha de hoy y a nombre de la empresa (19.738871ms)
+  ✔ PU-72 una oferta sin cupos no puede reabrirse y solo su empresa la cierra (1.208147ms)
+  ✔ PU-73 el panel cuenta pendientes y aprobadas, resume los convenios y ofrece solo las acciones que proceden (2.277317ms)
+✔ Servicio de ofertas y panel de Coordinación (23.630437ms)
+▶ Servicio de postulaciones: envío de la postulación
+  ✔ PU-49 una postulación válida queda en estado "enviada" y la empresa recibe un aviso (19.335975ms)
+  ✔ PU-50 no se acepta postular a una oferta cerrada, vencida o sin cupos (2.024862ms)
+  ✔ PU-51 un estudiante no puede postularse dos veces a la misma oferta (0.935944ms)
+  ✔ PU-52 si dos envíos simultáneos pasan la revisión, la restricción UNIQUE de la base se traduce a 409 (0.636159ms)
+  ✔ PU-53 una violación UNIQUE de otra restricción no se disfraza de postulación duplicada (0.49096ms)
+  ✔ PU-54 solo un estudiante puede postularse; una empresa recibe 403 y no se guarda nada (0.220472ms)
+  ✔ PU-55 si el correo falla, la postulación queda guardada y el fallo se anota en el registro (0.564182ms)
+✔ Servicio de postulaciones: envío de la postulación (25.83154ms)
+▶ Servicio de postulaciones: decisión de Coordinación
+  ✔ PU-56 al aprobar con convenio vigente se guarda quién decidió y se avisa al estudiante y a la empresa (1.504513ms)
+  ✔ PU-57 al aprobar el último cupo la oferta se cierra sola; si quedan cupos sigue abierta (0.739037ms)
+  ✔ PU-58 si la oferta ya no tiene cupos libres, aprobar responde 409 SIN_CUPOS y no cambia la postulación (0.430154ms)
+  ✔ PU-59 con el convenio vencido no se puede aprobar: 409 CONVENIO_NO_VIGENTE, sin cambios ni correos (0.444936ms)
+  ✔ PU-60 devolver por convenio vencido guarda el motivo y, ya regularizado el convenio, la postulación puede aprobarse (1.908852ms)
+  ✔ PU-61 rechazar sin motivo responde 422 y no se escribe nada (0.426759ms)
+  ✔ PU-62 decidir sobre una postulación que no existe responde 404 (0.353723ms)
+✔ Servicio de postulaciones: decisión de Coordinación (6.128102ms)
+▶ Servicio de postulaciones: acciones de la empresa y privacidad
+  ✔ PU-63 la preselección avisa a toda Coordinación; descartar no genera correos (0.474703ms)
+  ✔ PU-64 una empresa no puede decidir ni ver los postulantes de las ofertas de otra empresa (0.450255ms)
+  ✔ PU-65 la hoja de vida solo la descargan su dueño, la empresa de la oferta y Coordinación (0.310843ms)
+✔ Servicio de postulaciones: acciones de la empresa y privacidad (1.371756ms)
+▶ Validación de cuentas
+  ✔ PU-26 un registro de estudiante válido devuelve los datos limpios (correo en minúsculas, texto sin espacios) (1.561826ms)
+  ✔ PU-27 se rechaza documento corto, semestre fuera de rango y falta de autorización de datos (Ley 1581) (1.604698ms)
+  ✔ PU-28 la contraseña exige 8 caracteres o más, con letras y números (0.374888ms)
+  ✔ PU-29 el NIT acepta dígito de verificación opcional y rechaza letras (0.369162ms)
+✔ Validación de cuentas (5.631173ms)
+▶ Validación de ofertas y postulaciones
+  ✔ PU-30 una oferta no admite fecha de cierre anterior a hoy (1.00947ms)
+  ✔ PU-31 una oferta exige entre 1 y 50 cupos y una modalidad válida (0.302133ms)
+  ✔ PU-32 la hoja de vida debe ser un PDF: se rechaza otra extensión y un contenido que no es PDF (1.546455ms)
+  ✔ PU-33 la hoja de vida no puede superar el tamaño máximo configurado (0.331013ms)
+  ✔ PU-34 para postularse hay que autorizar el tratamiento de datos y la carta tiene un máximo de 1500 caracteres (0.276925ms)
+  ✔ PU-35 rechazar o devolver exige un motivo de al menos 5 caracteres; aprobar no (0.427756ms)
+  ✔ PU-36 el convenio exige fechas reales y que la de fin sea posterior a la de inicio (0.345393ms)
+✔ Validación de ofertas y postulaciones (4.691294ms)
+▶ Filtros del listado de ofertas
+  ✔ PU-37 los filtros inválidos se ignoran y el tamaño de página se limita a 20 (0.34039ms)
+✔ Filtros del listado de ofertas (0.4741ms)
+ℹ tests 95
+ℹ suites 18
+ℹ pass 95
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6396.952229
+ℹ start of coverage report
+ℹ ------------------------------------------------------------------------------------------
+ℹ file                     | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------------------------------------
+ℹ server                   |        |          |         | 
+ℹ  app.js                  | 100.00 |    75.00 |   66.67 | 
+ℹ  config.js               | 100.00 |   100.00 |  100.00 | 
+ℹ  controllers             |        |          |         | 
+ℹ   index.js               |  97.83 |    97.14 |   92.59 | 34-35
+ℹ  db                      |        |          |         | 
+ℹ   migraciones.js         |  88.00 |    88.89 |  100.00 | 37-42
+ℹ   pool.js                |  94.87 |    66.67 |   66.67 | 31-32
+ℹ   semilla.js             | 100.00 |    96.15 |  100.00 | 
+ℹ  integrations            |        |          |         | 
+ℹ   correo.js              |  74.07 |   100.00 |   66.67 | 9-15
+ℹ  middlewares             |        |          |         | 
+ℹ   autenticacion.js       | 100.00 |   100.00 |   80.00 | 
+ℹ   errores.js             | 100.00 |    87.50 |  100.00 | 
+ℹ   registroPeticiones.js  |  44.44 |   100.00 |    0.00 | 7-16
+ℹ   seguridad.js           | 100.00 |   100.00 |  100.00 | 
+ℹ   spa.js                 |  58.62 |   100.00 |   50.00 | 14-25
+ℹ  repositories            |        |          |         | 
+ℹ   catalogoRepo.js        | 100.00 |   100.00 |  100.00 | 
+ℹ   convenioRepo.js        | 100.00 |   100.00 |  100.00 | 
+ℹ   index.js               | 100.00 |   100.00 |  100.00 | 
+ℹ   ofertaRepo.js          | 100.00 |   100.00 |  100.00 | 
+ℹ   postulacionRepo.js     | 100.00 |   100.00 |  100.00 | 
+ℹ   usuarioRepo.js         |  86.54 |    92.31 |   80.00 | 65-71 73-79
+ℹ  routes                  |        |          |         | 
+ℹ   index.js               | 100.00 |   100.00 |  100.00 | 
+ℹ  services                |        |          |         | 
+ℹ   authService.js         |  99.21 |    94.29 |  100.00 | 15
+ℹ   convenioService.js     |  95.12 |    76.92 |  100.00 | 25-26
+ℹ   coordinacionService.js | 100.00 |    96.30 |  100.00 | 
+ℹ   index.js               | 100.00 |   100.00 |   80.00 | 
+ℹ   ofertaService.js       |  95.18 |    81.82 |  100.00 | 49-50 76-77
+ℹ   postulacionService.js  | 100.00 |    93.10 |  100.00 | 
+ℹ   presentadores.js       | 100.00 |    66.67 |  100.00 | 
+ℹ  utils                   |        |          |         | 
+ℹ   convenios.js           | 100.00 |    87.50 |  100.00 | 
+ℹ   errores.js             | 100.00 |   100.00 |  100.00 | 
+ℹ   estados.js             | 100.00 |   100.00 |  100.00 | 
+ℹ   fechas.js              | 100.00 |   100.00 |  100.00 | 
+ℹ   hash.js                | 100.00 |   100.00 |  100.00 | 
+ℹ   jwt.js                 |  96.83 |    95.45 |  100.00 | 55-56
+ℹ   limitador.js           |  96.00 |    90.00 |   87.50 | 22-23
+ℹ   ofertas.js             | 100.00 |   100.00 |  100.00 | 
+ℹ   pdfMinimo.js           | 100.00 |    88.89 |  100.00 | 
+ℹ   pgErrores.js           | 100.00 |    60.00 |  100.00 | 
+ℹ   plantillas.js          | 100.00 |    85.71 |  100.00 | 
+ℹ   validadores.js         |  93.81 |    78.02 |  100.00 | 37 97-99 115-117 125-127 135-137
+ℹ ------------------------------------------------------------------------------------------
+ℹ all files                |  96.73 |    90.71 |   94.55 | 
+ℹ ------------------------------------------------------------------------------------------
+ℹ end of coverage report
