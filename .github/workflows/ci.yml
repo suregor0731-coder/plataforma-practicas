@@ -1,0 +1,45 @@
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: practicas
+          POSTGRES_PASSWORD: practicas
+          POSTGRES_DB: practicas_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U practicas -d practicas_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      DATABASE_URL_TEST: postgres://practicas:practicas@localhost:5432/practicas_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Pruebas unitarias y de integración
+        run: npm test
+
+      - name: Compilar el frontend
+        run: npm run build:web
