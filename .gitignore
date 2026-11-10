@@ -1,0 +1,17 @@
+# Dependencias y compilados
+node_modules/
+web/dist/
+
+# Configuración local (nunca se sube)
+.env
+
+# Reportes y archivos generados al probar
+coverage/
+e2e/salida/
+*.log
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

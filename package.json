@@ -1,0 +1,35 @@
+{
+  "name": "plataforma-practicas",
+  "version": "0.1.0",
+  "description": "Prototipo funcional de la plataforma web de prácticas profesionales (Ingeniería de Software, Taller integrador, Unidad 3).",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "dev:web": "node scripts/build-web.mjs --watch",
+    "dev": "node --env-file-if-exists=.env --watch server/index.js",
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "db:migrar": "node --env-file-if-exists=.env scripts/migrar.js",
+    "db:semilla": "node --env-file-if-exists=.env scripts/semilla.js",
+    "db:reiniciar": "node --env-file-if-exists=.env scripts/migrar.js --reiniciar && node --env-file-if-exists=.env scripts/semilla.js",
+    "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "test:unitarias": "node --test \"test/unit/*.test.js\"",
+    "test:integracion": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/integration/*.test.js\"",
+    "test:cobertura": "node --env-file-if-exists=.env --test --test-concurrency=1 --experimental-test-coverage --test-coverage-include=\"server/**/*.js\" \"test/**/*.test.js\"",
+    "test:e2e": "node --env-file-if-exists=.env e2e/flujo-critico.mjs"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.13.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^6.30.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "playwright": "^1.56.0"
+  }
+}
