@@ -45,7 +45,7 @@ Para desarrollar, use dos terminales: `npm run dev` reinicia el servidor al guar
 
 ### Cuentas de demostración
 
-Todas usan la contraseña `Demo2026*`. Los datos de demostración son ficticios.
+Todas usan la contraseña `Demo2026*`.
 
 | Rol | Correo | Convenio de la empresa |
 |---|---|---|
